@@ -309,7 +309,6 @@ export default function App() {
     setServiceableCouriers(null); 
   };
 
-  // Simulated AI Agent Pincode Check (Checks all at once)
   const handleCheckPincode = async () => {
     if (!pincode || pincode.length !== 6 || isNaN(pincode)) {
       setPincodeStatus('error');
@@ -321,40 +320,17 @@ export default function App() {
     setPincodeStatus(null);
     setPincodeMessage('');
 
-    // Mock API Call Simulation
+    // Quick Fix: Automatically approve any valid 6-digit pincode
     setTimeout(() => {
-      const available = [];
-      const p0 = pincode[0];
-
-      // Tirupati Mock Logic
-      if (['1', '3', '4', '7', '8'].includes(p0)) available.push('tirupati');
+      // Make all couriers available
+      const available = ['bluedart', 'tirupati', 'dtdc_express', 'dtdc_surface'];
       
-      // Bluedart Mock Logic (Includes a mock blacklist for your testing, like 142029)
-      const bluedartBlacklist = ['142029', '000000'];
-      if (['1', '2', '3', '4', '5', '7', '8'].includes(p0) && !bluedartBlacklist.includes(pincode)) {
-        available.push('bluedart');
-      }
-
-      // DTDC Mock Logic
-      if (p0 !== '9') {
-        available.push('dtdc_express');
-        available.push('dtdc_surface');
-      }
-
       setServiceableCouriers(available);
-      
-      if (available.length > 0) {
-        setPincodeStatus('success');
-        setPincodeMessage(`✅ Found ${available.length} shipping options for ${pincode}.`);
-        if (!available.includes(courier)) setCourier(available[0]);
-      } else {
-        setPincodeStatus('error');
-        setPincodeMessage(`❌ No shipping partners serviceable for ${pincode}.`);
-        setCourier('');
-      }
-      
+      setPincodeStatus('success');
+      setPincodeMessage(`✅ Serviceable! Found ${available.length} shipping options for ${pincode}.`);
+      setCourier(available[0]);
       setIsCheckingPincode(false);
-    }, 1500); 
+    }, 600); 
   };
 
   const generateMessage = () => {
